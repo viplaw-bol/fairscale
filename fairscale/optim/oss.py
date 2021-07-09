@@ -521,6 +521,12 @@ class OSS(Optimizer):
 
             # Populate the fp16 shards
             if self.broadcast_fp16:
+                # if NCCL broadcasts will be done in an independent stream
+                # make sure that prior compute work is complete
+                if torch.device("cuda").type == self._default_device.type:
+                    for device in self._per_device_params.keys():
+                        torch.cuda.synchronize(device=device)
+
                 for device in self.buckets.keys():
                     for dst_rank, bucket in self.buckets[device].items():
                         bucket.to(dtype=torch.float16, device=device, non_blocking=True, keep_param_alignment=False)
@@ -547,6 +553,9 @@ class OSS(Optimizer):
                 for device in self.buckets.keys():
                     for dst_rank in self.buckets[device].keys():
                         bucket.to(dtype=torch.float32, device=device, non_blocking=True, keep_param_alignment=True)
+
+                if torch.cuda.is_available():
+                    torch.cuda.synchronize()
 
     def _setup_flat_buffers(self) -> None:
         """Make all params which are on the same device and tied to the same rank views of a single buffer.
