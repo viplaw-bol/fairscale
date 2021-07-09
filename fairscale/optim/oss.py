@@ -517,12 +517,6 @@ class OSS(Optimizer):
         """Helper function to broadcast all the parameters from a given device"""
 
         with profiler.record_function("fairscale::oss::broadcast_params"):
-            # if NCCL broadcasts will be done in an independent stream
-            # make sure that prior compute work is complete
-            if torch.device("cuda").type == self._default_device.type:
-                for device in self._per_device_params.keys():
-                    torch.cuda.synchronize(device=device)
-
             work_handles = []  # Work handles are consumed within this scope, no callback
 
             # Populate the fp16 shards

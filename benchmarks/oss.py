@@ -225,7 +225,8 @@ def train(
                 else:
                     return optimizer.step(closure)
 
-            if need_profiling and not args.cpu:
+            if need_profiling and n_items > 0 and not args.cpu:
+                # Skip the first step, warmup
                 logging.info("Profiling the run")
                 with profiler.profile(use_cuda=True, record_shapes=True, profile_memory=True) as prof:  # type: ignore
                     with profiler.record_function("batch"):
