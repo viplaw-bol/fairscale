@@ -516,7 +516,7 @@ class OSS(Optimizer):
     def _broadcast_params(self) -> None:
         """Helper function to broadcast all the parameters from a given device"""
 
-        with profiler.record_function("fairscale::oss::refresh_trainable"):
+        with profiler.record_function("fairscale::oss::broadcast_params"):
             # if NCCL broadcasts will be done in an independent stream
             # make sure that prior compute work is complete
             if torch.device("cuda").type == self._default_device.type:
