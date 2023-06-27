@@ -1,47 +1,7 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
-# Adopted from
-# https://github.com/facebookresearch/detectron2/blob/main/.circleci/config.yml
-#
-# Pro tip: download circle ci cli to validate the config locally during development.
-#
-# To reset/clean the cache update the CACHE_VERSION variable in project settings
-# in the fairscale project in CircleCI's web UI. The CACHE_VERSION follows the convention
-# v$(FAIRSCALE_VERSION)-${CACHE_NUMBER}. E.g. v0.4.2-1. CACHE_NUMBER must start
-# at 1 and increase in whole numbers. When changing the CACHE_VERSION manually
-# always set the FAIRSCALE_VERSION value to the fairscale version being tested.
-# To reset the cache when not updating the fairscale version, only update the
-# CACHE_NUMBER value.
-
 version: 2.1
 
 orbs:
   codecov: codecov/codecov@1.0.2
-
-# -------------------------------------------------------------------------------------
-# Environments to run the jobs in
-# -------------------------------------------------------------------------------------
-cpu_py38: &cpu_py38
-  docker:
-    - image: circleci/python:3.8
-  resource_class: large
-
-cpu_py39: &cpu_py39
-  docker:
-    - image: circleci/python:3.9
-  resource_class: large
-
-cpu_py310: &cpu_py310
-  docker:
-    - image: circleci/python:3.10
-  resource_class: large
-
-cpu_py311: &cpu_py311
-  docker:
-    - image: cimg/python:3.11.0
-  resource_class: large
 
 # Here is the list of GPU images:
 # https://circleci.com/docs/2.0/configuration-reference/#available-linux-gpu-images
@@ -287,8 +247,10 @@ commands:
 # -------------------------------------------------------------------------------------
 
 jobs:
-  cpu_tests_py38:
-    <<: *cpu_py38
+ cpu_tests_py38: 
+  docker:
+    - image: circleci/python:3.8
+   resource_class: large
 
     working_directory: ~/fairscale
 
@@ -319,7 +281,9 @@ jobs:
           path: test-results
 
   cpu_tests_py39:
-    <<: *cpu_py39
+   docker:
+     - image: circleci/python:3.9
+    resource_class: large
 
     working_directory: ~/fairscale
 
@@ -351,7 +315,9 @@ jobs:
           path: test-results
 
   cpu_tests_py310:
-    <<: *cpu_py310
+   docker:
+      - image: circleci/python:3.10
+    resource_class: large
 
     working_directory: ~/fairscale
 
@@ -383,8 +349,9 @@ jobs:
           path: test-results
 
   cpu_tests_py311:
-    <<: *cpu_py311
-
+    docker:
+      - image: cimg/python:3.11.0
+    resource_class: large
     working_directory: ~/fairscale
 
     steps:
