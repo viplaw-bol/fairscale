@@ -1,2 +1,4 @@
 # FairScale should only depends on torch, not things higher level than torch.
 torch >= 1.6.0
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
+wheel>=0.38.0 # not directly required, pinned by Snyk to avoid a vulnerability
